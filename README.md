@@ -1,6 +1,6 @@
-### <h1 align=center>Homework 4</h1>
+### <h1 align=center>Homework 5</h1>
 ---
-<p align=center>This repository contains the dependencies and code for Homework 4 along with custom tests and newly added calculator functions</p>
+<p align=center>This repository contains the dependencies and code for Homework 5 along with custom tests and newly added calculator functions</p>
 
 <p align=center><b> On cloning the repository, please use</b></p>
 <div align=center>
