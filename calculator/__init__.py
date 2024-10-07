@@ -1,7 +1,8 @@
 from typing import List
+from decimal import Decimal
 
 class Calculation:
-    def __init__(self, operation: str, operands: List[float], result: float):
+    def __init__(self, operation: str, operands: List[Decimal], result: Decimal):
         self.operation = operation
         self.operands = operands
         self.result = result
@@ -9,10 +10,10 @@ class Calculation:
     def __str__(self) -> str:
         return f"{self.operation.capitalize()}: {self.operands} = {self.result}"
 
-    def get_operands(self) -> List[float]:
+    def get_operands(self) -> List[Decimal]:
         return self.operands
 
-    def get_result(self) -> float:
+    def get_result(self) -> Decimal:
         return self.result
 
 class Calculator:
@@ -21,25 +22,25 @@ class Calculator:
     def __init__(self) -> None:
         pass
 
-    def add(self, a: float, b: float) -> float:
+    def add(self, a: Decimal, b: Decimal) -> Decimal:
         self._validate_inputs(a, b)
         result = a + b
         self._add_to_history("add", [a, b], result)
         return result
 
-    def subtract(self, a: float, b: float) -> float:
+    def subtract(self, a: Decimal, b: Decimal) -> Decimal:
         self._validate_inputs(a, b)
         result = a - b
         self._add_to_history("subtract", [a, b], result)
         return result
 
-    def multiply(self, a: float, b: float) -> float:
+    def multiply(self, a: Decimal, b: Decimal) -> Decimal:
         self._validate_inputs(a, b)
         result = a * b
         self._add_to_history("multiply", [a, b], result)
         return result
 
-    def divide(self, a: float, b: float) -> float:
+    def divide(self, a: Decimal, b: Decimal) -> Decimal:
         self._validate_inputs(a, b)
         if b == 0:
             raise ZeroDivisionError("Cannot divide by zero.")
@@ -47,7 +48,7 @@ class Calculator:
         self._add_to_history("divide", [a, b], result)
         return result
 
-    def _add_to_history(self, operation: str, operands: List[float], result: float) -> None:
+    def _add_to_history(self, operation: str, operands: List[Decimal], result: Decimal) -> None:
         calc = Calculation(operation, operands, result)
         Calculator.history.append(calc)
 
@@ -60,8 +61,8 @@ class Calculator:
         cls.history.clear()
 
     @staticmethod
-    def _validate_inputs(a: float, b: float) -> None:
-        if not isinstance(a, (int, float)) or not isinstance(b, (int, float)):
+    def _validate_inputs(a: Decimal, b: Decimal) -> None:
+        if not isinstance(a, (int, float, Decimal)) or not isinstance(b, (int, float, Decimal)):
             raise ValueError("Operands must be numeric.")
 
     @classmethod
