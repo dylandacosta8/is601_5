@@ -1,11 +1,22 @@
-# plugins/multiply_command.py
-from calculator import Calculator
+from decimal import Decimal
+from calculator import Calculator, Calculation
 from . import Command
 
 class MultiplyCommand(Command):
-    def execute(self, a, b):
-        calculator = Calculator()
-        return calculator.multiply(a, b)
+    def execute(self, a: Decimal, b: Decimal) -> Decimal:
+        self._validate_inputs(a, b)
+        result = a * b
+        
+        # Create and store the Calculation instance
+        calculation = Calculation("multiply", [a, b], result)
+        Calculator.history.append(calculation)
 
-    def help(self):
+        return result
+
+    def help(self) -> str:
         return "Usage: multiply <value1> <value2> - Multiplies two numbers."
+
+    @staticmethod
+    def _validate_inputs(a, b) -> None:
+        if not isinstance(a, (int, float, Decimal)) or not isinstance(b, (int, float, Decimal)):
+            raise ValueError("Operands must be numeric.")
