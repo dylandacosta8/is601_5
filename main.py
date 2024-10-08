@@ -1,10 +1,9 @@
-from calculator import Calculator
+import concurrent.futures
 from calculator.plugins import PluginManager
+from decimal import Decimal
 
 # REPL function
 def repl():
-    calculator = Calculator()
-
     # Initialize the PluginManager and load plugins
     plugin_manager = PluginManager()
     plugin_manager.load_plugins()
@@ -32,9 +31,9 @@ def repl():
         try:
             operation, value1, value2 = user_input.split()
 
-            # Convert values to floats
-            value1 = float(value1)
-            value2 = float(value2)
+            # Convert values to Decimal
+            value1 = Decimal(value1)
+            value2 = Decimal(value2)
 
             # Check if the operation is valid
             command_instance = plugin_manager.get_command(operation)
@@ -42,8 +41,10 @@ def repl():
                 print("Invalid operation. Type 'menu' to see available plugins.")
                 continue
 
-            # Execute the command
-            result = command_instance.execute(value1, value2)
+            # Execute the command in a separate process
+            with concurrent.futures.ProcessPoolExecutor() as executor:
+                future = executor.submit(command_instance.execute, value1, value2)
+                result = future.result()  # This will block until the result is available
 
             print(f"Result: {result}")
 
