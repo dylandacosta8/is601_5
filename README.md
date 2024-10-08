@@ -14,15 +14,21 @@
 ### The Homework meets the following goals:
 
 <ol>
-<li>Add, Subtract, Multiply, and Divide</li>
-<li>Throw exception for divide by zero and test that the exception is thrown.</li>
-<li>Use at least one class, at least one static method, at least one class method.</li>
-<li>It needs to store a history of calculations, so that you can retrieve the last calculation, add a calculation.</li>
-<li>It needs to have 100% test coverage, pass pylint, and you need to do your best to not repeat any lines of code.</li>
-<li>You should use type hints for input parameter types and return types.</li>
-<li>Implement a pytest fixture to the tests.</li>
-<li>Implemented a new command to pytest to generate N number of records, so that you can run the following command: pytest --num_records=100 to generate 100 records.</li>
-<li>Added a main.py file to serve as an entry point to your program and provide command line utilities.</li>
+<li><b>Add, Subtract, Multiply, and Divide</b></li>
+<li>Throw exception for <b>divide by zero</b> and test that the exception is thrown.</li>
+<li>Use at least one class, at least one <b>static method</b>, at least one <b>class method</b>.</li>
+<li>It needs to store a <b>history of calculations</b>, so that you can retrieve the last calculation, add a calculation.</li>
+<li><b>Near 100% test coverage, pass pylint</b></li>
+<li>Type hints for input parameter types and return types.</li>
+<li>Implements a <b>pytest fixture</b> to the tests.</li>
+<li>Implements a new command to pytest to generate N number of records, so that you can run the following command: <b>pytest --num_records=100</b> to generate 100 records.</li>
+<li>Added a main.py file to serve as an entry point to your program and provide <b>command line utilities</b>.</li>
+<li>Covers <b>REPL and command patterns</b> with four basic commands add, subtract, multiply and divide.</li>
+<li>Implements a <b>menu command</b> that prints the command dictionary and gives and example of command usage</li>
+<li>Implements a menu command to list available command and usage example.</li>
+<li>Uses <b>Plugin architecture</b> to dynamically load new plugins.</li>
+<li>Uses <b>multiprocessing</b> capabilities to enable commands to run on separate cores.</li>
+<li><b>setuptools:</b> collection of enhancements to the Python distutils that allow developers to more easily build and distribute Python packages.</li>
 </ol>
 
 ---
@@ -34,6 +40,8 @@
 <li><b>pytest-pylint:</b> Pylint analyses your code without actually running it. It checks for errors, enforces a coding standard, looks for code smells, and can make suggestions about how the code could be refactored.</li>
 <li><b>pytest-cov: </b>Coverage.py is a tool for measuring code coverage of Python programs. It monitors your program, noting which parts of the code have been executed, then analyzes the source to identify code that could have been executed but was not.</li>
 <li><b>Faker: </b>Faker is a Python package that generates fake data for you.</li>
+<li><b><a href='https://docs.python.org/3/library/concurrent.futures.html'>concurrent.futures:</a></b> a high-level interface for asynchronously executing callables.</li>
+<li><b>abc:</b> This module provides the infrastructure for defining abstract base classes (ABCs).</li>
 </ol>
 
 ---
@@ -49,19 +57,21 @@
 </ol>
 
 ---
-<b>Note: </b>
+### Usage
 <ol>
 <li>To run tests with fake data generated using Faker, use</li>
 
 `pytest --num_records=100 --cov --pylint`
 
-<li>To use the command line utility use one of the following command:</li>
+<li>To run the command line utility use one of the following command:</li>
 
-`python main.py <num1> <num2> <add/subtract/multiply/divide>`
+`python main.py`
 
-For example,
+You can then use the various command line commands like add, subtract, multiply and divide as such:
 
-`python main.py 2 3 add`
+`add 2 3` or `divide 5 0`
+
+<li>You can also use a menu command to list the available commands and see a usage guide.</li>
 
 
 </ol>
