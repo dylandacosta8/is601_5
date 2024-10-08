@@ -5,11 +5,11 @@ from abc import ABC, abstractmethod
 class Command(ABC):
     @abstractmethod
     def execute(self, a, b):
-        pass
+        pass #TODO
 
     @abstractmethod
     def help(self):
-        pass
+        pass #TODO
 
 class PluginManager:
     def __init__(self):
@@ -30,9 +30,8 @@ class PluginManager:
                 
                 # Use the module name as the command key
                 self.plugins[module_name] = command_instance
-                print(f"Loaded command: {module_name}")
-            except Exception as e:
-                print(f"Failed to load command '{module_name}': {e}")
+            except Exception as e: #TODO
+                print(f"Failed to load command '{module_name}': {e}") #TODO
 
     def list_command_modules(self, package):
         # Returns a list of command modules in the specified package
