@@ -1,26 +1,40 @@
-''' Tests '''
+"""Tests for the Calculator application.
+
+This module contains test cases for verifying the functionality of the
+Calculator class, its operations, and the integration of command plugins.
+"""
+
 import pytest
 from calculator import Calculator, Calculation
+from calculator.plugins import PluginManager
+from calculator.plugins.divide import DivideCommand
+from calculator.plugins.add import AddCommand
+from calculator.plugins.subtract import SubtractCommand
+from calculator.plugins.multiply import MultiplyCommand
 
 @pytest.fixture
-def calc_with_fake_data(fake_data):
-    """Fixture to create a Calculator instance using fake data."""
+def plugin_manager():
+    """Fixture to create a PluginManager instance and load plugins."""
+    manager = PluginManager()
+    manager.load_plugins()
+    return manager
+
+@pytest.fixture
+def calc_with_fake_data(plugin_manager, fake_data):
+    """Fixture to create a Calculator instance and execute fake operations using plugins."""
     calculator = Calculator()
     Calculator.clear_history()  # Clear previous history
 
     for record in fake_data:
-        if record["operation"] == "add":
-            calculator.add(record["operand1"], record["operand2"])
-        elif record["operation"] == "subtract":
-            calculator.subtract(record["operand1"], record["operand2"])
-        elif record["operation"] == "multiply":
-            calculator.multiply(record["operand1"], record["operand2"])
-        elif record["operation"] == "divide":
-            if record["operand2"] == 0:
-                with pytest.raises(ZeroDivisionError):
-                    calculator.divide(record["operand1"], record["operand2"])
-            else:
-                calculator.divide(record["operand1"], record["operand2"])
+        command_instance = plugin_manager.get_command(record["operation"])
+        if command_instance is None:
+            raise ValueError(f"Invalid operation: {record['operation']}") #TODO
+
+        if record["operation"] == "divide" and record["operand2"] == 0:
+            with pytest.raises(ZeroDivisionError):
+                command_instance.execute(record["operand1"], record["operand2"])
+        else:
+            command_instance.execute(record["operand1"], record["operand2"])
 
     return calculator
 
@@ -48,7 +62,7 @@ def test_divide(calc_with_fake_data):
     for record in calc_with_fake_data.get_history():
         if record.operation == "divide":
             if record.operands[1] == 0:
-                continue  # Skip zero division check as it's handled in calc_with_fake_data
+                continue  # Skip zero division check as it's handled in calc_with_fake_data #TODO
             assert record.result == record.operands[0] / record.operands[1]
 
 def test_history(calc_with_fake_data):
@@ -99,25 +113,46 @@ def test_calculation_get_result():
 
 # Updated invalid input tests
 @pytest.mark.parametrize("operation", ["add", "subtract", "multiply", "divide"])
-def test_invalid_operand_types(calc_with_fake_data, operation):
+def test_invalid_operand_types(plugin_manager, operation):
     """Test that invalid operand types raise ValueError."""
-    calculator = calc_with_fake_data  # Use the calculator with fake data
     with pytest.raises(ValueError, match="Operands must be numeric."):
+        command_instance = plugin_manager.get_command(operation)
         if operation == "add":
-            calculator.add("string", 2)
+            command_instance.execute("string", 2)
         elif operation == "subtract":
-            calculator.subtract("string", 2)
+            command_instance.execute("string", 2)
         elif operation == "multiply":
-            calculator.multiply("string", 2)
+            command_instance.execute("string", 2)
         elif operation == "divide":
-            calculator.divide("string", 2)
+            command_instance.execute("string", 2)
 
     with pytest.raises(ValueError, match="Operands must be numeric."):
+        command_instance = plugin_manager.get_command(operation)
         if operation == "add":
-            calculator.add(2, None)
+            command_instance.execute(2, None)
         elif operation == "subtract":
-            calculator.subtract(2, None)
+            command_instance.execute(2, None)
         elif operation == "multiply":
-            calculator.multiply(2, None)
+            command_instance.execute(2, None)
         elif operation == "divide":
-            calculator.divide(2, None)
+            command_instance.execute(2, None)
+
+def test_add_help():
+    """Test the help function of the AddCommand plugin."""
+    command = AddCommand()
+    assert command.help() == "Usage: add <value1> <value2> - Adds two numbers."
+
+def test_subtract_help():
+    """Test the help function of the SubtractCommand plugin."""
+    command = SubtractCommand()
+    assert command.help() == "Usage: subtract <value1> <value2> - Subtracts second number from the first."
+
+def test_multiply_help():
+    """Test the help function of the MultiplyCommand plugin."""
+    command = MultiplyCommand()
+    assert command.help() == "Usage: multiply <value1> <value2> - Multiplies two numbers."
+
+def test_divide_help():
+    """Test the help function of the DivideCommand plugin."""
+    command = DivideCommand()
+    assert command.help() == "Usage: divide <value1> <value2> - Divides first number by the second."
